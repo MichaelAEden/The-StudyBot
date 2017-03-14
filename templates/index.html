@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>StudyBot</title>
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway|Roboto:100" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/homepage.css') }}">
+  </head>
+
+  <body>
+  	<div class="jumbotron text-center">
+      <h1>Studybot</h1>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <button id="process-file" class="vertical-center btn btn-large btn-primary">
+          <span>
+            Upload
+          </span>
+        </button>
+        <form id="notes-input" method="post" style="display:none;" enctype="multipart/form-data">
+          <input type="file" name="notes-file" />
+          <input type="submit" />
+        </form>
+      </div>
+      <div class="col-md-6">
+        <button class="vertical-center btn btn-large btn-primary">
+          <span>Sample</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="processing" class="collapse">
+      <h1 class="header">
+        Processing
+      </h1>
+      <div class="progress">
+        <div class="progress-bar progress-bar-striped active" role="progress-bar" style="width: 40%;"></div>
+      </div>
+    </div>
+
+    <div id="quiz" class="collapse">
+      <div class="quiz-question row">
+        <h2 class="question">
+          Mitochondria is:
+        </h2>
+        <div class="response radio">
+          <label><input type="radio" name="A">the powerhouse of the cell</label>
+        </div>
+        <div class="response radio">
+          <label><input type="radio" name="B">dumb</label>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/noteProcessor.js') }}"></script>
+  </body>
+</html>

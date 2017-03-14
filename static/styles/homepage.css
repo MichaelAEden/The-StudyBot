@@ -1,0 +1,73 @@
+html {
+	background-size: cover;
+	background-color: black;
+}
+
+input {
+	color: #FFF;
+	position: relative;
+	right: -20px;
+}
+
+p {
+	font-size: 150%;
+	margin: 20px;
+}
+
+#processing {
+
+}
+
+	#processing h1 {
+		font-family: 'Raleway', sans-serif;
+	}
+
+#quiz {
+	font-family: 'Raleway', sans-serif;
+}
+
+	#quiz .quiz-question {
+
+	}
+
+		#quiz .quiz-question .question {
+			font-style: italic;
+		}
+
+		#quiz .quiz-question .response {
+			font-style: oblique;
+		}
+
+.header {
+	color: darkblue;
+	text-align: center;
+}
+
+.jumbotron {
+	background-image: url(http://cdn.pcwallart.com/images/dark-blue-gradient-wallpaper-4.jpg);
+	background-size: cover;
+}
+
+	.jumbotron h1 {
+		color: #FFF;
+	}
+
+.input_form {
+	color: white;
+	font-family: 'Raleway', sans-serif;
+	text-align: center;
+}
+
+.vertical-center {
+	margin: 25%;
+	min-height: 10%;
+	min-height: 10vh;
+	width: 50%;
+}
+
+.btn-large span {
+	width: 40%;
+	height: 100px;
+	font-size: 50px;
+	font-color: white;
+}
