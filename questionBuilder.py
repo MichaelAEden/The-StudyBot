@@ -1,6 +1,4 @@
 import random
-import sys
-import re
 import string
 
 TRUE_FALSE = 0
@@ -40,11 +38,12 @@ class QuestionChoice(Question):
 	def __init_(self, statement):
 		Question.__init__(self, statement)
 
-		self.answer_index = -1	# Index of the correct answer out of all the choices.
-		self.responses = []		# Array containing responses in the form of strings.
+	def create_question_from_statements(self, statement):
+		self.responses = []
+		self.answer_index = -1
 
 	def get_responses(self):
-		return []
+		return self.responses
 
 	def check_answer(self, user_answer):
 		"""
@@ -69,12 +68,11 @@ class QuestionTrueFalse(QuestionChoice):
 	def __init__(self, statement):
 		QuestionChoice.__init__(self, statement)
 
-		self.responses = [self.TRUE_STRING, self.FALSE_STRING]
-
 	def create_question_from_statements(self, statement):
-		action_verbs = ["is", "was", "are", "were", "will", "can", "should"]
+		QuestionChoice.create_question_from_statements(self, statement)
 		self.answer = statement
 		self.answer_index = self.TRUE
+		self.responses = [self.TRUE_STRING, self.FALSE_STRING]
 
 		# Randomly chooses if answer to question is "True" or "False"
 		is_true = random.randint(0, 1)
@@ -126,6 +124,8 @@ class QuestionMultipleChoice(QuestionChoice):
 
 	def create_question_from_statements(self, statements):
 		"""Tries to make a multiple choice question of at least 2 choices from inputted statements"""
+		QuestionChoice.create_question_from_statements(self, statements)
+
 		minimum_responses = 2
 
 		false_statements = []
@@ -147,19 +147,20 @@ class QuestionMultipleChoice(QuestionChoice):
 						else:
 							break
 
-		self.number_of_responses = len(false_statements) + 1
+		number_of_responses = len(false_statements) + 1
 		answer_index = random.randint(0, len(false_statements))
 
 		j = 0
-		for i in range(self.number_of_responses):
+		for i in range(number_of_responses):
 			if i == answer_index:
-				self.responses[true_statement] = True
+				self.responses.append(true_statement)
 			else:
-				self.responses[false_statements[i]] = False
+				self.responses.append(false_statements[j])
 				j += 1
 
 		self.question = "Which of the following is true?"
-		self.answer = string.uppercase[answer_index]
+		self.answer = true_statement
+		self.answer_index = answer_index
 
 		return True
 

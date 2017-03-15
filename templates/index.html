@@ -19,7 +19,7 @@
             Upload
           </span>
         </button>
-        <form id="notes-input" method="post" style="display:none;" enctype="multipart/form-data">
+        <form id="notes-form" style="display:none;" enctype="multipart/form-data">
           <input type="file" name="notes-file" />
           <input type="submit" />
         </form>
@@ -36,22 +36,11 @@
         Processing
       </h1>
       <div class="progress">
-        <div class="progress-bar progress-bar-striped active" role="progress-bar" style="width: 40%;"></div>
+        <div class="progress-bar progress-bar-striped active" role="progress-bar" style="width: 100%;"></div>
       </div>
     </div>
 
     <div id="quiz" class="collapse">
-      <div class="quiz-question row">
-        <h2 class="question">
-          Mitochondria is:
-        </h2>
-        <div class="response radio">
-          <label><input type="radio" name="A">the powerhouse of the cell</label>
-        </div>
-        <div class="response radio">
-          <label><input type="radio" name="B">dumb</label>
-        </div>
-      </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

@@ -1,5 +1,8 @@
-import questionBuilder
-import notes
+from questionBuilder import *
+from notes import Notes
+import string
+import jinja2
+from jinja2 import Environment, PackageLoader, select_autoescape
 
 class QuizCreator:
 
@@ -11,8 +14,7 @@ class QuizCreator:
 			MULTIPLE_CHOICE : 0
 		}
 
-		self.sorted_notes = None
-
+		self.notes = None
 		self.questions = []
 		self.question_index = -1
 
@@ -44,24 +46,24 @@ class QuizCreator:
 			question = None
 
 	def check_answer(self, user_answer):
-		return question.check_answer(user_answer)
+		return self.questions[self.question_index].check_answer(user_answer)
 
 	def reset(self):
 		self.notes = None
 		self.questions = []
 		self.question_index = -1
 
-	def add_notes(self, string):
-		notes = Notes(string)
+	def replace_notes(self, string):
+		self.notes = Notes(string)
 		self.regenerate_questions()
 
-	def replace_notes(self, string):
-		notes.add(string)
+	def add_notes(self, string):
+		self.notes.add(string)
 		self.regenerate_questions()
 
 	def get_next_question(self):
 		"""
-		Gets the next question, and incremenets the question pointer.
+		Gets the next question, and increments the question pointer.
 
 		:return: False if out of bounds, True otherwise.
 		"""
@@ -73,10 +75,53 @@ class QuizCreator:
 			return False
 		else:
 			question = self.questions[self.question_index]
-			question.ask_question(bot)
-			return True
+			return question
 
 	def regenerate_questions(self):
 		self.questions = []
 		self.question_index = -1
 		self.create_questions()
+
+	# Generates a filled quiz template
+	def generate_template(self):
+		quiz = ""
+
+		self.questions = [
+			QuestionTrueFalse("Studybot is kind of cool."),
+			QuestionMultipleChoice([
+				"Mitochondria is the powerhouse of the cell",
+				"Birds are made of cells",
+				"Inorganic material is not made out of cells",
+				"Studybot is cool"
+			])
+		]
+
+		env = Environment(
+			loader=PackageLoader('quiz', 'templates'),
+			autoescape=select_autoescape(['html', 'xml'])
+		)
+
+		if len(self.questions) == 0:
+			raise Exception("No questions to create quiz!")
+
+		for question_index in range(len(self.questions)):
+			question = self.questions[question_index]
+
+			if isinstance(question, QuestionChoice):
+				template = env.get_template('question_mc.html')
+
+				quiz += template.render(
+					question_id=str(question_index + 1) + ".",
+					question=question.get_question(),
+					responses=question.get_responses()
+				)
+
+			else:
+				template = env.get_template('question_text.html')
+
+				quiz += template.render(
+					question_id=question_index,
+					question=question.get_question()
+				)
+
+		return quiz

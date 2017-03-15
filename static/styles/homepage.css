@@ -3,12 +3,6 @@ html {
 	background-color: black;
 }
 
-input {
-	color: #FFF;
-	position: relative;
-	right: -20px;
-}
-
 p {
 	font-size: 150%;
 	margin: 20px;
@@ -24,19 +18,26 @@ p {
 
 #quiz {
 	font-family: 'Raleway', sans-serif;
+	font-color: darkblue;
+	margin: 10px;
 }
 
 	#quiz .quiz-question {
-
+		margin: 10px;
 	}
 
 		#quiz .quiz-question .question {
 			font-style: italic;
 		}
 
-		#quiz .quiz-question .response {
+		#quiz .quiz-question .responses {
 			font-style: oblique;
+			font-size: 20px;
 		}
+
+			#quiz .quiz-question .responses .response-choice {
+				margin-left: 10px;
+			}
 
 .header {
 	color: darkblue;
