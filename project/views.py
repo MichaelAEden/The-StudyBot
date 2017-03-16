@@ -1,14 +1,12 @@
-import os
 import time
+import os
 
 from notes import Notes
 from quiz import QuizCreator
 
+from app import app
 from flask import url_for, request
-from flask import Flask
 from flask import render_template
-
-app = Flask(__name__)
 
 @app.route('/')
 def index():
