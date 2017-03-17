@@ -1,3 +1,4 @@
 studybot_config
+.idea
 *.pyc
 *.DS_Store
