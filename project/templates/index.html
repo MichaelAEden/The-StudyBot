@@ -3,7 +3,7 @@
   <head>
     <title>StudyBot</title>
     <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Raleway|Roboto:100" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway|Roboto:300" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/homepage.css') }}">
   </head>
 
@@ -13,34 +13,62 @@
     </div>
 
     <div class="row">
-      <div class="col-md-6">
-        <button id="process-file" class="vertical-center btn btn-large btn-primary">
-          <span>
+      <div class="col-md-4">
+        <button id="process-notes__file" class="input-option btn btn-large btn-primary break-word">
+          <span class="text-uppercase">
             Upload
           </span>
+          </br>
+          <span class="text-muted text-small">
+            Upload your notes from a text file.
+          </span>
         </button>
-        <form id="notes-form" style="display:none;" enctype="multipart/form-data">
+        <form id="notes-form__file" style="display:none;" enctype="multipart/form-data">
           <input type="file" name="notes-file" />
           <input type="submit" />
         </form>
       </div>
-      <div class="col-md-6">
-        <button class="vertical-center btn btn-large btn-primary">
-          <span>Sample</span>
+      <div class="col-md-4">
+        <textarea type="text" name="notes-text" id="notes-input" class="input-option"></textarea>
+        <button id="process-notes__text" class="btn btn-primary">
+          <span>
+            Generate Quiz
+          </span>
+        </button>
+      </div>
+      <div class="col-md-4">
+        <button id="process-notes__sample" class="input-option btn btn-large btn-primary">
+          <span class="text-uppercase">
+            Sample
+          </span>
+          </br>
+          <span class="text-muted text-small">
+            Try out an example set of notes.
+          </span>
         </button>
       </div>
     </div>
 
     <div id="processing" class="collapse">
-      <h1 class="header">
+      <h1 id="progress-text" class="header">
         Processing
       </h1>
       <div class="progress">
-        <div class="progress-bar progress-bar-striped active" role="progress-bar" style="width: 100%;"></div>
+        <div class="progress-bar progress-bar-striped active" role="progress-bar" style="width: 99%;"></div>
       </div>
     </div>
 
-    <div id="quiz" class="collapse">
+    <div id="quiz-section" class="collapse">
+      <div id="quiz">
+      </div>
+
+      <div class="quiz-responses row">
+        <button id="submit-quiz-button" class="btn btn-large btn-primary">
+          <span>
+            Submit Responses
+          </span>
+        </button>
+      </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

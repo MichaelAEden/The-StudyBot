@@ -8,13 +8,21 @@ p {
 	margin: 20px;
 }
 
-#processing {
-
+#process-notes__text {
+	font-family: 'Roboto', sans-serif;
+	font-size: 20px;
+	width: 80%;
 }
 
-	#processing h1 {
-		font-family: 'Raleway', sans-serif;
-	}
+#processing h1 {
+	font-family: 'Raleway', sans-serif;
+}
+
+#notes-input {
+	margin: 20px 10%;
+	width: 80%;
+	height: 100%;
+}
 
 #quiz {
 	font-family: 'Raleway', sans-serif;
@@ -24,7 +32,14 @@ p {
 
 	#quiz .quiz-question {
 		margin: 10px;
+		height: 200px;
 	}
+
+		#quiz .quiz-question h1 {
+			display: inline;
+			font-size: 100px;
+			color: #999;
+		}
 
 		#quiz .quiz-question .question {
 			font-style: italic;
@@ -38,6 +53,31 @@ p {
 			#quiz .quiz-question .responses .response-choice {
 				margin-left: 10px;
 			}
+
+.btn{
+    white-space: normal !important;
+    margin: 20px auto;
+    display: block;
+    word-wrap: break-word; 
+}
+
+	.btn.btn-medium {
+		font-size: 25px;
+		width: 75%;
+		height: 30%;
+	}
+
+	.btn.btn-large {
+		font-size: 50px;
+		width: 80%;
+		height: 30%;
+	}
+
+	.btn span {
+		font-family: 'Roboto', sans-serif;
+		font-color: white;
+		text-align: center;
+	}
 
 .header {
 	color: darkblue;
@@ -53,22 +93,6 @@ p {
 		color: #FFF;
 	}
 
-.input_form {
-	color: white;
-	font-family: 'Raleway', sans-serif;
-	text-align: center;
-}
-
-.vertical-center {
-	margin: 25%;
-	min-height: 10%;
-	min-height: 10vh;
-	width: 50%;
-}
-
-.btn-large span {
-	width: 40%;
-	height: 100px;
-	font-size: 50px;
-	font-color: white;
+.input-option .text-small {
+	font-size: 18px;
 }

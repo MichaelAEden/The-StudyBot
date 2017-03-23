@@ -1,0 +1,17 @@
+          <div class="row quiz-question" id="question_{{ question_id }}" 
+          data-type="{% block question_type %}{% endblock %}" data-answer="{{ answer_str }}">
+            <div class="col-sm-1">
+              <h1>
+                {{ question_id }}
+              </h1>
+            </div>
+            <div class="col-sm-10">
+              <h2 class="question">
+                {{ question_str }}
+              </h2>
+                {% block user_response %}{% endblock %}
+            </div>
+            <div class="col-sm-1">
+              <img class="answer-correct" src="" style="display: none;">
+            </div>
+          </div>

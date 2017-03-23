@@ -1,13 +1,8 @@
+import textAnalytics
 import random
-import string
+import re
 
-TRUE_FALSE = 0
-FILL_BLANK = 1
-MULTIPLE_CHOICE = 2
-
-
-
-class Question:
+class Question(object):
 
 	def __init__(self, statement):
 		self.question = None
@@ -18,7 +13,6 @@ class Question:
 	def create_question_from_statements(self, statement):
 		"""
 		Generates a question from a statement.
-
 		:param statement: Some true statement.
 		:return: False if unsuccessful, True otherwise.
 		"""
@@ -26,6 +20,9 @@ class Question:
 
 	def get_question(self):
 		return self.question
+
+	def get_answer(self):
+		return self.answer
 
 	def check_answer(self, user_answer):
 		return user_answer == self.answer
@@ -45,17 +42,16 @@ class QuestionChoice(Question):
 	def get_responses(self):
 		return self.responses
 
+	def get_answer_index(self):
+		return self.answer_index
+
 	def check_answer(self, user_answer):
 		"""
 		Checks if the user's answer was correct.
-
 		:param user_answer: The index of the selected answer.
 		:return: True if this equals the index of the correct answer, False otherwise.
 		"""
 		return user_answer == self.answer_index
-
-
-
 
 class QuestionTrueFalse(QuestionChoice):
 
@@ -78,7 +74,7 @@ class QuestionTrueFalse(QuestionChoice):
 		is_true = random.randint(0, 1)
 
 		if not is_true:
-			self.question = make_statement_false(statement)
+			self.question = get_false_statement(statement)
 			if self.question != None:
 				self.answer_index = self.FALSE
 		
@@ -115,8 +111,6 @@ class QuestionFillBlank(Question):
 		user_answer = user_answer.lower().strip()
 		return user_answer == self.answer.lower().strip()
 
-
-
 class QuestionMultipleChoice(QuestionChoice):
 
 	def __init__(self, statement):
@@ -127,6 +121,8 @@ class QuestionMultipleChoice(QuestionChoice):
 		QuestionChoice.create_question_from_statements(self, statements)
 
 		minimum_responses = 2
+		if len(statements) < minimum_responses:
+			return False
 
 		false_statements = []
 		true_statement = None
@@ -135,7 +131,7 @@ class QuestionMultipleChoice(QuestionChoice):
 			if i == len(statements) - 1:
 				true_statement = statements[i]
 			else:
-				false_statement = make_statement_false(statements[i])
+				false_statement = get_false_statement(statements[i])
 				if false_statement != None:
 					false_statements.append(false_statement)
 				else:
@@ -166,29 +162,53 @@ class QuestionMultipleChoice(QuestionChoice):
 
 
 
-def make_statement_false(statement):
+def get_false_statement(statement):
 	"""
-	Makes a true statement alse.
-
+	Makes a true statement false.
 	:param statement: A string representing a true statement.
-	:return: A false version of the same statement, or None if this failed.
+	:return: String representing a false statement, or None if failed.
 	"""
-	action_verbs = ["is", "was", "are", "were", "will", "can", "should"]
-	answer = True
+	negatives = {
+		"will not": "will",
+		"weren't": "were",
+		"aren't": "are",
+		"wasn't": "was",
+		"shouldn't": "should",
+		"doesn't": "does",
+		"isn't": "is",
+		"not ": " "
+	}
+	number_match = re.search(r'\d+(\.\d+)?', statement)
+	question = None
 
-	if "not" in statement:
-		question = statement.replace("not ", "")
-		answer = False
-	else:
-		for action_verb in action_verbs:
-			if action_verb in statement:
-				question = statement.replace(action_verb, action_verb + " not")
-				answer = False
+	# Replaces a number with a another number within a certain range (e.g.: 1.5 -> 2.0)
+	if number_match != None:
+		number_str = number_match.group(0)
+		if "." in number_str:
+			precision = len(number_str.split(".")[1])
+		else:
+			precision = 0
 
-				break
+		number_val = float(number_str)
+		lower_variance_limit, upper_variance_limit = 0.15, 0.50
+		variance = random.uniform(lower_variance_limit, upper_variance_limit)
 
-	return question if (answer == False) else None
+		if number_val != 1:
+			new_val = number_val * variance
+			if new_val != number_val:
+				new_str = ("%%.%if" % precision) % new_val
+				question = statement.replace(number_str, new_str)
 
+	# Replaces a negative with its counterpart (e.g.: "wasn't" -> "was")
+	if question == None:
+		for negative, action in negatives.iteritems():
+			if negative in statement:
+				question = statement.replace(negative, action)
 
+	# Replaces an action with its negative counterpart (e.g.: "was" -> "wasn't")
+	if question == None:
+		for action in negatives.keys():
+			if action in statement:
+				question = statement.replace(action, action + " not")
 
-
+	return question

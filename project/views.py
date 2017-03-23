@@ -15,22 +15,39 @@ def index():
 @app.route('/upload', methods=["GET", "POST"])
 def upload_notes():
 	if request.method == "POST":
-		time.sleep(2)
-
-		string = "No upload :("
+		print "Uploading notes!"
 
 		if 'notes-file' not in request.files:
-			return "No file found :("
+			return "No file found."
 
 		file = request.files['notes-file']
 		if file.filename == '':
-			return "No selected file :("
+			return "No selected file."
 
 		if file:
 			string = file.read()
-			print "READ! :)"
 
-		return QuizCreator().generate_template()
+			notes = Notes(string)
+			quiz = QuizCreator(notes)
+
+			return quiz.generate_template()
+		else:
+			return "400"
+
+	elif request.method == "GET":
+		return render_template("index.html")
+
+@app.route('/submit', methods=["GET", "POST"])
+def submit_notes():
+	if request.method == "POST":
+		print "Submitting notes!"
+		form = request.data
+		if form == '':
+			return "400"
+		else:
+			notes = Notes(form)
+			quiz = QuizCreator(notes)
+			return quiz.generate_template()
 
 	elif request.method == "GET":
 		return render_template("index.html")

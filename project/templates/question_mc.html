@@ -1,13 +1,15 @@
-      <div class="quiz-question row">
-        <h1>
-          {{ question_id }}
-        </h1>
-        <h2 class="question">
-          {{ question }}
-        </h2>
-        {% for response in responses %}
-        <div class="responses radio">
-          <input type="radio" name="A"><label class="response-choice">{{ response }}</label>
-        </div>
-        {% endfor %}
-      </div>
+        {% extends "question.html" %}
+          {% block question_type %}MultipleChoice{% endblock %}
+          {% block user_response %}
+            {% for response in responses %}
+              <div class="responses radio"
+                {% if response == answer_str %}
+                  {{ "data-correct=True" }}
+                {% else %}
+                  {{ "data-correct=True" }}
+                {% endif %}
+                >
+                <input type="radio"><label class="response-choice">{{ response }}</label>
+              </div>
+            {% endfor %}
+          {% endblock %}
