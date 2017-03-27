@@ -8,10 +8,13 @@ p {
 	margin: 20px;
 }
 
+ br {
+ 	line-height: 5px;
+ }
+
 #process-notes__text {
 	font-family: 'Roboto', sans-serif;
 	font-size: 20px;
-	width: 80%;
 }
 
 #processing h1 {
@@ -19,20 +22,18 @@ p {
 }
 
 #notes-input {
-	margin: 20px 10%;
-	width: 80%;
-	height: 100%;
+	margin: 20px auto;
 }
 
 #quiz {
 	font-family: 'Raleway', sans-serif;
 	font-color: darkblue;
-	margin: 10px;
+	margin: 15px;
 }
 
 	#quiz .quiz-question {
 		margin: 10px;
-		height: 200px;
+		min-height: 200px;
 	}
 
 		#quiz .quiz-question h1 {
@@ -45,6 +46,12 @@ p {
 			font-style: italic;
 		}
 
+		#quiz .quiz-question .answer-correct {
+			margin: auto;
+			max-width: 75px;
+			max-height: 75px;
+		}
+
 		#quiz .quiz-question .responses {
 			font-style: oblique;
 			font-size: 20px;
@@ -55,25 +62,23 @@ p {
 			}
 
 .btn{
-    white-space: normal !important;
     margin: 20px auto;
     display: block;
-    word-wrap: break-word; 
+    word-wrap: none; 
 }
 
 	.btn.btn-medium {
 		font-size: 25px;
-		width: 75%;
-		height: 30%;
+		min-height: 50px;
 	}
 
 	.btn.btn-large {
 		font-size: 50px;
-		width: 80%;
-		height: 30%;
+		min-height: 75px;
 	}
 
 	.btn span {
+		margin: 0 !important;
 		font-family: 'Roboto', sans-serif;
 		font-color: white;
 		text-align: center;

@@ -1,15 +1,17 @@
         {% extends "question.html" %}
           {% block question_type %}MultipleChoice{% endblock %}
           {% block user_response %}
+            <form>
             {% for response in responses %}
               <div class="responses radio"
-                {% if response == answer_str %}
+                {% if response == answer_response %}
                   {{ "data-correct=True" }}
                 {% else %}
-                  {{ "data-correct=True" }}
+                  {{ "data-correct=False" }}
                 {% endif %}
                 >
-                <input type="radio"><label class="response-choice">{{ response }}</label>
+                <input type="radio" name="responses_{{ question_id }}"><label class="response-choice">{{ response }}</label>
               </div>
             {% endfor %}
+            </form>
           {% endblock %}

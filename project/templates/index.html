@@ -15,12 +15,11 @@
     <div class="row">
       <div class="col-md-4">
         <button id="process-notes__file" class="input-option btn btn-large btn-primary break-word">
-          <span class="text-uppercase">
+          <span>
             Upload
           </span>
-          </br>
-          <span class="text-muted text-small">
-            Upload your notes from a text file.
+          <span class="text-small">
+            </br>Upload your notes from a text file.
           </span>
         </button>
         <form id="notes-form__file" style="display:none;" enctype="multipart/form-data">
@@ -29,7 +28,7 @@
         </form>
       </div>
       <div class="col-md-4">
-        <textarea type="text" name="notes-text" id="notes-input" class="input-option"></textarea>
+        <textarea name="notes-text" id="notes-input" class="input-option form-control"></textarea>
         <button id="process-notes__text" class="btn btn-primary">
           <span>
             Generate Quiz
@@ -38,12 +37,11 @@
       </div>
       <div class="col-md-4">
         <button id="process-notes__sample" class="input-option btn btn-large btn-primary">
-          <span class="text-uppercase">
+          <span>
             Sample
           </span>
-          </br>
-          <span class="text-muted text-small">
-            Try out an example set of notes.
+          <span class="text-small">
+            </br>Try out an example set of notes.
           </span>
         </button>
       </div>
@@ -51,10 +49,11 @@
 
     <div id="processing" class="collapse">
       <h1 id="progress-text" class="header">
-        Processing
+        Processing...
       </h1>
-      <div class="progress">
-        <div class="progress-bar progress-bar-striped active" role="progress-bar" style="width: 99%;"></div>
+      <div id="progress-bar" class="progress progress-striped active">
+         <div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+         </div>
       </div>
     </div>
 
@@ -71,6 +70,10 @@
       </div>
     </div>
 
+    <script type="text/javascript">
+      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+      $RES_DIR = "{{ url_for('static', filename='res') }}";
+    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='scripts/noteProcessor.js') }}"></script>
