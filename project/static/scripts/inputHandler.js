@@ -1,3 +1,7 @@
+// Intervals
+hideProgressInterval = null
+updateProgressInterval = null
+
 // Opens the file selection dialog when the button is clicked
 $('#process-notes__file').on('click', function () {
 	$('#notes-form__file input[type=file]').click();
@@ -22,10 +26,8 @@ function updateProgress() {
 }
 
 function hideProgress() {
-	$('#processing').collapse({
-		toggle: false
-	});
-	console.log("Getting CALLED");
+	$('#processing').collapse('hide');
+	clearInterval(hideProgressInterval)
 }
 
 function animateProgressBar(percentComplete) {
@@ -34,9 +36,7 @@ function animateProgressBar(percentComplete) {
 
 function reset() {
 	// Resets the value of the progress bar
-	$('#processing').collapse({
-		toggle: true
-	});
+	$('#processing').collapse('show');
 	$("#progress-text").css("color", "darkblue");
 	$("#progress-text").html("Processing...");
 	$('#progress-bar').attr("aria-valuenow", 0);
@@ -54,8 +54,6 @@ function sendNotes(notes, is_file) {
 		url = "/submit";
 	}
 
-	var interval;
-
 	$.ajax({
 		type: 'POST',
 		url: url,
@@ -64,22 +62,21 @@ function sendNotes(notes, is_file) {
 		processData: false,
 		async: true,
 		beforeSend: function() {
-			interval = setInterval(updateProgress, 500);
+			updateProgressInterval = setInterval(updateProgress, 500);
 		},
 		success: function (data) {
-			clearInterval(interval);
-			interval = setInterval(hideProgress, 500);
+			clearInterval(updateProgressInterval);
+			hideProgressInterval = setInterval(hideProgress, 3000);
 			if (data == "400" || data == "500") {
 				$("#progress-text").css("color", "red");
 				$("#progress-text").html("Failed");
 			}
 			else {
+				animateProgressBar("100")
 				$("#progress-text").css("color", "green");
 				$("#progress-text").html("Success!");
 				$('#quiz').html(data);
-				$('#quiz-section').collapse({
-					toggle: true
-				})
+				$('#quiz-section').collapse('show')
 			}
 		}
 	});
