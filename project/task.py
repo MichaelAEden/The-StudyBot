@@ -5,5 +5,8 @@ class Task(object):
     def update_progress(self, progress):
         self.progress = progress
 
+    def add_progress(self, progress):
+        self.progress += progress
+
     def get_percent_progress(self):
         return str(int(self.progress * 100))

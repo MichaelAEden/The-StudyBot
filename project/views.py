@@ -4,19 +4,22 @@ import os
 from quiz import QuizCreator
 
 from app import app
-from flask import url_for, request
+from flask import request
 from flask import render_template
+
+import traceback
 
 running_tasks = []
 
 OK = "200"
 BAD_REQUEST = "400"
+SERVER_ERROR = "500"
+
 
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 @app.route('/upload', methods=["GET", "POST"])
 def upload_notes():
@@ -31,42 +34,43 @@ def upload_notes():
             return BAD_REQUEST
 
         if file:
-            string = file.read()
-            quiz = QuizCreator(string)
-            running_tasks.append(quiz)
-            quiz.create_questions()
-            return quiz.generate_template(),
+            return process_notes(string = file.read())
+
         else:
             return BAD_REQUEST
 
     elif request.method == "GET":
         return render_template("index.html"), OK
-
 
 @app.route('/submit', methods=["GET", "POST"])
 def submit_notes():
     if request.method == "POST":
         print "Submitting notes!"
         form = request.data
-        if form == '':
+        if not form:
             return BAD_REQUEST
         else:
-            quiz = QuizCreator(form)
-            running_tasks.append(quiz)
-            quiz.create_questions()
-            return quiz.generate_template(), OK
+            return process_notes(form)
 
     elif request.method == "GET":
         return render_template("index.html"), OK
 
+def process_notes(string):
+    # try:
+    quiz = QuizCreator(string)
+    running_tasks.append(quiz)
+    quiz.create_questions()
+    return quiz.generate_template(), OK
+    # except:
+    #     traceback.print_exc()
+    #     return SERVER_ERROR
 
 @app.route('/progress')
 def progress():
-    if running_tasks is not []:
+    if running_tasks != []:
         return running_tasks[0].get_percent_progress()
     else:
         return "0"
-
 
 if __name__ == "__main__":
     app.run()

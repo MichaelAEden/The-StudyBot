@@ -4,19 +4,12 @@ import re
 
 class Question(object):
 
-    def __init__(self, statement):
-        self.question = None
-        self.answer = None
+    question = None
+    answer = None
 
-        self.create_question_from_statements(statement)
-
-    def create_question_from_statements(self, statement):
-        """
-        Generates a question from a statement.
-        :param statement: Some true statement.
-        :return: False if unsuccessful, True otherwise.
-        """
-        return False
+    def __init__(self, question, answer):
+        self.question = question
+        self.answer = answer
 
     def get_question(self):
         return self.question
@@ -27,17 +20,27 @@ class Question(object):
     def check_answer(self, user_answer):
         return user_answer == self.answer
 
+    @classmethod
+    def create_from_notes(cls, notes):
+        """
+        Generates a question from notes.
+        :param notes: Notes object
+        :return: None if unsuccessful, Question object otherwise.
+        """
+        return None
+
 class QuestionChoice(Question):
     """
     Type of question in which the user selects from different choices, rather than a text response.
     """
 
-    def __init_(self, statement):
-        Question.__init__(self, statement)
+    responses = []
+    answer_index = -1
 
-    def create_question_from_statements(self, statement):
-        self.responses = []
-        self.answer_index = -1
+    def __init__(self, question, answer, responses, answer_index):
+        Question.__init__(self, question, answer)
+        self.responses = responses
+        self.answer_index = answer_index
 
     def get_responses(self):
         return self.responses
@@ -61,110 +64,112 @@ class QuestionTrueFalse(QuestionChoice):
     TRUE = 0
     FALSE = 1
 
-    def __init__(self, statement):
-        QuestionChoice.__init__(self, statement)
+    @classmethod
+    def create_from_notes(cls, notes):
+        statement = notes.get_next_statement()
 
-    def create_question_from_statements(self, statement):
-        QuestionChoice.create_question_from_statements(self, statement)
-        self.answer = statement
-        self.answer_index = self.TRUE
-        self.responses = [self.TRUE_STRING, self.FALSE_STRING]
+        question = statement
+        answer = statement
+        responses = [cls.TRUE_STRING, cls.FALSE_STRING]
+        answer_index = cls.TRUE
 
         # Randomly chooses if answer to question is "True" or "False"
         is_true = random.randint(0, 1)
 
         if not is_true:
-            self.question = get_false_statement(statement)
-            if self.question != None:
-                self.answer_index = self.FALSE
+            false_statement = get_false_statement(statement)
+            if false_statement != None:
+                question = false_statement
+                answer_index = cls.FALSE
 
-        # If creating a statement with a false answer was unsuccessful, also create a true one
-        if is_true or self.answer_index is self.TRUE:
-            self.question = statement
-            self.answer_index = self.TRUE
-
-        return True
-
-    def get_question(self):
-        return self.question
+        notes.set_statement_used(statement)
+        return cls(question, answer, responses, answer_index)
 
 class QuestionFillBlank(Question):
 
-    def __init__(self, statement):
-        Question.__init__(self, statement)
-
-    def create_question_from_statements(self, statement):
-        key_words = textAnalytics.get_key_phrases(statement)
-
-        if key_words == []:
-            return False
-
-        key_word_index = random.randint(0, len(key_words) - 1)
-        key_word = key_words[key_word_index]
-
-        self.question = statement.replace(key_word, "________")
-        self.answer = key_word
-
-        return True
+    def __init__(self, question, answer):
+        Question.__init__(self, question, answer)
 
     def check_answer(self, user_answer):
         user_answer = user_answer.lower().strip()
         return user_answer == self.answer.lower().strip()
 
+    @classmethod
+    def create_from_notes(cls, notes):
+        statement = notes.get_next_statement()
+        key_words = textAnalytics.get_key_phrases(statement)
+
+        if not key_words or all(key == "" for key in key_words):
+            print "Couldn't grab any key words!"
+            return None
+
+        key_word_index = random.randint(0, len(key_words) - 1)
+        key_word = key_words[key_word_index]
+
+        answer = key_word
+        question = statement.replace(key_word, "________")
+
+        notes.set_statement_used(statement)
+        return cls(question, answer)
+
 class QuestionMultipleChoice(QuestionChoice):
 
-    def __init__(self, statement):
-        QuestionChoice.__init__(self, statement)
+    MINIMUM_RESPONSES = 2
+    MAXIMUM_RESPONSES = 4
 
-    def create_question_from_statements(self, statements):
-        """Tries to make a multiple choice question of at least 2 choices from inputted statements"""
-        QuestionChoice.create_question_from_statements(self, statements)
+    @classmethod
+    def create_from_notes(cls, notes):
+        """Tries to make a multiple choice question of at least 2 choices from inputted notes"""
+        QuestionChoice.create_from_notes(notes)
 
-        minimum_responses = 2
-        if len(statements) < minimum_responses:
-            return False
-
+        used_statements = []
         false_statements = []
+
         true_statement = None
+        number_of_responses = 0
 
-        for i in range(len(statements)):
-            if i == len(statements) - 1:
-                true_statement = statements[i]
-            else:
-                false_statement = get_false_statement(statements[i])
-                if false_statement != None:
-                    false_statements.append(false_statement)
+        while notes.are_unused_statements() and number_of_responses < cls.MAXIMUM_RESPONSES:
+            statement = notes.get_next_statement()
+            false_statement = get_false_statement(statement)
+
+            if false_statement is not None:
+                false_statements.append(false_statement)
+                used_statements.append(statement)
+
+            if false_statement is None or len(false_statements) == cls.MAXIMUM_RESPONSES - 1:
+                if true_statement is None:
+                    true_statement = statement
                 else:
-                    if true_statement == None:
-                        true_statement = statements[i]
-                    else:
-                        if i < minimum_responses:
-                            return False
-                        else:
-                            break
+                    break
 
-        number_of_responses = len(false_statements) + 1
+            number_of_responses = len(false_statements) + 1
+
+        if number_of_responses <= cls.MINIMUM_RESPONSES:
+            print "Couldn't find enough choices!"
+            return None
+
+        notes.set_statements_used(used_statements)
         answer_index = random.randint(0, len(false_statements))
 
         j = 0
+        responses = []
         for i in range(number_of_responses):
             if i == answer_index:
-                self.responses.append(true_statement)
+                responses.append(true_statement)
             else:
-                self.responses.append(false_statements[j])
+                responses.append(false_statements[j])
                 j += 1
 
-        self.question = "Which of the following is true?"
-        self.answer = true_statement
-        self.answer_index = answer_index
+        question = "Which of the following is true?"
+        answer = true_statement
 
-        return True
+        return cls(question, answer, responses, answer_index)
 
 def get_false_statement(statement):
     """
-    Makes a true statement false.
-    :param statement: A string representing a true statement.
-    :return: String representing a false statement, or None if failed.
+    Makes a true notes false.
+    :param notes: A string representing a true notes.
+    :return: String representing a false notes, or None if failed.
     """
     negatives = {
         "will not": "will",

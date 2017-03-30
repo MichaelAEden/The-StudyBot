@@ -24,3 +24,6 @@ def get_key_phrases(string):
         return obj['documents'][0]['keyPhrases']
     except:
         return []
+
+def is_complete_sentence(string):
+    return True

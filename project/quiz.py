@@ -3,6 +3,8 @@ from notes import Notes
 from task import Task
 from jinja2 import Environment, PackageLoader, select_autoescape
 
+import operator
+
 
 class QuizCreator(Task):
     def __init__(self, string):
@@ -13,53 +15,38 @@ class QuizCreator(Task):
 
         self.notes = Notes(string)
         self.questions = []
-        self.notes = {
-            "Sentences": ["Mitochondria is the powerhouse of the cell.",
-                          "There are 500 cells in every person.",
-                          "DNA are the instructions for the cell.",
-                          "No two people can have the same DNA."
-                          ]
-        }
         self.question_index = -1
 
-    def get_least_asked_question(self):
+    def get_least_to_most_asked_questions(self):
         """Gets the type of question which appears the least in the list of questions"""
         questions = {}
         for Question in [QuestionFillBlank, QuestionMultipleChoice, QuestionTrueFalse]:
-            questions[Question.__name__] = 0
+            questions[Question] = 0
 
         for question in self.questions:
-            questions[question.__class__.__name__] += 1
+            questions[question.__class__] += 1
 
         print questions
-        return min(questions, key=questions.get)
+        return sorted(questions, key=questions.get)
 
     # TODO: introduce randomness here
     def create_questions(self):
-        statements = self.notes["Sentences"]
-        for statement_index in range(len(statements)):
-            self.update_progress(float(statement_index) / len(statements) + 1)
+        """Creates questions based on the set of notes"""
+        increment_progress = 1.0/self.notes.get_number_of_statements()
+
+        while self.notes.are_unused_statements():
+            self.add_progress(increment_progress)
 
             # To make an equal balance of questions, find the least asked type of question
-            statement = statements[statement_index]
             question = None
-            least_asked_question = self.get_least_asked_question()
-            print least_asked_question
+            question_types = self.get_least_to_most_asked_questions()
 
-            if least_asked_question == QuestionMultipleChoice.__name__:
-                current_index = self.notes["Sentences"].index(statement)
-                question = QuestionMultipleChoice(self.notes["Sentences"][current_index:current_index + 4])
-
-            if least_asked_question == QuestionFillBlank.__name__:
-                if question is None or question.get_question() is None:
-                    question = QuestionFillBlank(statement)
-
-            if least_asked_question == QuestionTrueFalse.__name__:
-                if question is None or question.get_question() is None:
-                    question = QuestionTrueFalse(statement)
-
-            if question is not None and question.get_question() is not None:
-                self.questions.append(question)
+            for question_type in question_types:
+                print question_type
+                question = question_type.create_from_notes(self.notes)
+                if question is not None:
+                    self.questions.append(question)
+                    break
 
     def reset(self):
         self.__init__(None)
@@ -72,7 +59,7 @@ class QuizCreator(Task):
         self.regenerate_questions()
 
     def generate_template(self):
-        """Generates a filled quiz template"""
+        """Generates a filled quiz HTML template"""
 
         if len(self.questions) == 0:
             raise Exception("No questions to create quiz!")
