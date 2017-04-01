@@ -7,5 +7,7 @@ and quizzing you on them.
 
 ![Alt text](/sample_pics/Interface.png?raw=true "The Interface for the StudyBot")
 
+---
+
 ![Alt text](/sample_pics/Questions.png?raw=true "Questions the StudyBot has Generated")
 
