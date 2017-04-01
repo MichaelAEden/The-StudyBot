@@ -97,10 +97,10 @@ class QuestionFillBlank(Question):
     @classmethod
     def create_from_notes(cls, notes):
         statement = notes.get_next_statement()
+
         key_words = textAnalytics.get_key_phrases(statement)
 
         if not key_words or all(key == "" for key in key_words):
-            print "Couldn't grab any key words!"
             return None
 
         key_word_index = random.randint(0, len(key_words) - 1)
@@ -122,30 +122,37 @@ class QuestionMultipleChoice(QuestionChoice):
         """Tries to make a multiple choice question of at least 2 choices from inputted notes"""
         QuestionChoice.create_from_notes(notes)
 
-        used_statements = []
+        used_statements = []    # To keep track of which statements are actually being used for questions
         false_statements = []
 
         true_statement = None
         number_of_responses = 0
 
-        while notes.are_unused_statements() and number_of_responses < cls.MAXIMUM_RESPONSES:
-            statement = notes.get_next_statement()
+        statements = notes.get_next_statements(max=cls.MAXIMUM_RESPONSES, min=cls.MINIMUM_RESPONSES)
+        if not statements:
+            return
+
+        # Make every statement in the list of statements False, except one
+        for statement in statements:
+            # If last statement and no true statement has been assigned, make one
+            if statements.index(statement) == len(statements) - 1 and true_statement is None:
+                true_statement = statement
+                break
+
             false_statement = get_false_statement(statement)
 
             if false_statement is not None:
                 false_statements.append(false_statement)
                 used_statements.append(statement)
-
-            if false_statement is None or len(false_statements) == cls.MAXIMUM_RESPONSES - 1:
+            else:
                 if true_statement is None:
                     true_statement = statement
                 else:
-                    break
+                    continue
 
-            number_of_responses = len(false_statements) + 1
-
+        # If the minimum number of responses could not be generated, this fails
+        number_of_responses = len(false_statements) + 1
         if number_of_responses <= cls.MINIMUM_RESPONSES:
-            print "Couldn't find enough choices!"
             return None
 
         notes.set_statements_used(used_statements)
@@ -182,7 +189,7 @@ def get_false_statement(statement):
         "not ": " "
     }
     number_match = re.search(r'\d+(\.\d+)?', statement)
-    question = None
+    false_statement = None
 
     # Replaces a number with a another number within a certain range (e.g.: 1.5 -> 2.0)
     if number_match != None:
@@ -197,22 +204,32 @@ def get_false_statement(statement):
         lower_variance_limit, upper_variance_limit = 0.15, 0.50
         variance = random.uniform(lower_variance_limit, upper_variance_limit)
 
+        sign = random.randint(0, 1)
+        if sign == 0:
+            sign = -1
+
+        variance *= sign
+
         if number_val != 1:
-            new_val = number_val * variance
+            new_val = number_val + (number_val * variance)
             if new_val != number_val:
                 new_str = ("%%.%if" % precision) % new_val
-                question = statement.replace(number_str, new_str)
+                false_statement = statement.replace(number_str, new_str, 1)
 
     # Replaces a negative with its counterpart (e.g.: "wasn't" -> "was")
-    if question == None:
+    if false_statement is None:
         for negative, action in negatives.iteritems():
             if negative in statement:
-                question = statement.replace(negative, action)
+                false_statement = statement.replace(negative, action, 1)
+                break
 
     # Replaces an action with its negative counterpart (e.g.: "was" -> "wasn't")
-    if question == None:
-        for action in negatives.keys():
+    if false_statement is None:
+        for action in negatives.values():
+            if action == " ":
+                continue
             if action in statement:
-                question = statement.replace(action, action + " not")
+                false_statement = statement.replace(action, action + " not", 1)
+                break
 
-    return question
+    return false_statement

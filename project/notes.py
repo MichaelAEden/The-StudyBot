@@ -22,10 +22,10 @@ class Notes(object):
         self.process_string(string)
 
     def process_string(self, string):
-        # Used to split the string into sentences
+        # TODO: determine difference periods used to end a sentence vs. in an acronym, decimal number ..
         number_match = r'\d+(\.\d+)?'
         bullet_point_match = r'(?:(?=\n*)(\n\s*?[\-\*\>]\s*.*?)(?=\n))+'
-        acronym_match = r'((?<!Dr|Mr|Ms|rs|St)\.)'
+        # acronym_match = r'((?<!Dr|Mr|Ms|rs|St)\.)'
 
         statements = []
 
@@ -39,6 +39,8 @@ class Notes(object):
 
         for number_match in re.finditer(number_match, string):
             self.amounts.append(float(number_match.group(0)))
+
+        string = string.replace(":", ".")
 
         # Remove unnecessary whitespace
         string = string.replace("\n", "").replace("\t", "")
@@ -54,9 +56,24 @@ class Notes(object):
 
     def get_next_statement(self):
         """Gets a statement which has not yet been used in a question"""
+        return self.get_next_statements(1)[0]
+
+    def get_next_statements(self, max, min=0):
+        """Gets statements which has not yet been used in a question"""
+
+        # If no minimum is specified, assume it is the maximum value
+        if not min:
+            min = max
+
+        statements = []
         for statement, usage in self.statements.iteritems():
             if usage == self.UNUSED:
-                return statement
+                statements.append(statement)
+                if len(statements) >= max:
+                    return statements
+
+        if len(statements) >= min:
+            return statements
 
         return None
 

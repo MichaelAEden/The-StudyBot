@@ -34,7 +34,6 @@ class QuizCreator(Task):
         for question in self.questions:
             questions[question.__class__] += 1
 
-        print questions
         return sorted(questions, key=questions.get)
 
     # TODO: introduce randomness here
@@ -47,11 +46,9 @@ class QuizCreator(Task):
             self.add_progress(increment_progress)
 
             # To make an equal balance of questions, find the least asked type of question
-            question = None
             question_types = self.get_least_to_most_asked_questions()
 
             for question_type in question_types:
-                print question_type
                 question = question_type.create_from_notes(self.notes)
                 if question is not None:
                     self.questions.append(question)
@@ -107,5 +104,6 @@ class QuizCreator(Task):
             quiz += response
             question_index += 1
 
+        self.set_progress(1)
         self.set_progress_text("Success!")
         return quiz

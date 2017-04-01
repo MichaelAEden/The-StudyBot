@@ -31,10 +31,10 @@ function checkTextAnswer(id) {
 function updateAnswer(id, isCorrect) {
 	var source;
 	if (isCorrect) {
-		source = $RES_DIR + "/correct.png";
+		source = $RES_DIR + "correct.png";
 	}
 	else {
-		source = $RES_DIR + "/incorrect.png";
+		source = $RES_DIR + "incorrect.png";
 	}
 	$("#question_" + id + " .answer-correct").attr("src", source);
 	$("#question_" + id + " .answer-correct").attr("style", "display:block;");

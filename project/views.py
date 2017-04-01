@@ -56,23 +56,21 @@ def submit_notes():
         return render_template("index.html"), OK
 
 def process_notes(string):
-    # try:
-    quiz = QuizCreator(string)
-    running_tasks.append(quiz)
-    quiz.create_questions()
-    return quiz.generate_template(), OK
-    # except:
-    #     traceback.print_exc()
-    #     return SERVER_ERROR
+    try:
+        quiz = QuizCreator(string)
+        running_tasks.append(quiz)
+        quiz.create_questions()
+        return quiz.generate_template(), OK
+    except:
+        traceback.print_exc()
+        return SERVER_ERROR
 
 @app.route('/progress')
 def progress():
     if running_tasks != []:
         return '{"percent_progress":"%s", "progress_text":"%s"}' % (running_tasks[0].get_percent_progress(), running_tasks[0].get_progress_text())
-        #return jsonify(percent_progress=running_tasks[0].get_percent_progress(), progress_text=running_tasks[0].get_progress_text())
     else:
         return '{"percent_progress":"0", "progress_text":"Submitting..."}'
-        #return jsonify(percent_progress="0", progress_text="Submitting...")
 
 if __name__ == "__main__":
     app.run()

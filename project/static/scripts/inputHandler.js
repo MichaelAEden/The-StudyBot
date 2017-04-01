@@ -19,14 +19,18 @@ $('button#submit-notes-text').on('click', function () {
 	sendNotes(text, false);
 });
 
+// Fills the notes textarea with sample notes
+$('button#submit-notes-sample').on('click', function () {
+    file_name = 'notes_sample.txt'
+    $.get($RES_DIR + file_name, function(data) {
+        var text = $('textarea#notes-input').val(data);
+	    sendNotes(data, false);
+    }, 'text');
+});
+
 function updateProgress() {
-	console.log("This is getting called at least...")
 	$.get('/progress').done( function(data) {
-		console.log("But is this?")
-		console.log(data)
 		var progress = jQuery.parseJSON(data);
-		console.log(progress.percent_progress)
-		console.log(progress.progress_text)
 		updateProgressBar(progress.percent_progress, progress.progress_text)
 	});
 }
@@ -41,8 +45,8 @@ function updateProgressBar(percentComplete, progressText) {
 	$('div#processing-progress-bar').css("width", percentComplete + "%").attr("aria-valuenow", percentComplete);
 }
 
+// Resets the value of the progress bar
 function reset() {
-	// Resets the value of the progress bar
 	updateProgressBar("0", "Submitting...")
 	$("#processing-progress-text").css("color", "darkblue");
 	$('div#processing-progress').collapse('show');
@@ -72,7 +76,7 @@ function sendNotes(notes, is_file) {
 		},
 		success: function (data) {
 			clearInterval(updateProgressInterval);
-			//hideProgressInterval = setInterval(hideProgress, 2000);
+			hideProgressInterval = setInterval(hideProgress, 2000);
 			if (data == "400" || data == "500") {
 				$("#processing-progress-text").css("color", "red");
 				updateProgressBar("0", "Failed...")

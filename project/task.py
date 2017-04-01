@@ -14,6 +14,9 @@ class Task(object):
     def add_progress(self, progress):
         self.progress += progress
 
+    def set_progress(self, progress):
+        self.progress = progress
+
     def set_progress_text(self, text):
         self.progress_text = text
 

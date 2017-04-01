@@ -1,0 +1,10 @@
+Mitochondria is the powerhouse of the cell. Every human cell contains more than 700 mitochondria.
+Mitochondria produces ATP, which is essentially the body's form of energy.
+The ribosome is a complex molecular machine, found within all living cells.
+
+There are three laws which all cells obey:
+    - All cells come from other cells
+    - Cells are the fundamental building blocks of life
+    - All living things are made of cells
+
+The human body is made 37 trillion cells.
