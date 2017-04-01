@@ -4,7 +4,7 @@ import os
 from quiz import QuizCreator
 
 from app import app
-from flask import request
+from flask import request, jsonify
 from flask import render_template
 
 import traceback
@@ -68,9 +68,11 @@ def process_notes(string):
 @app.route('/progress')
 def progress():
     if running_tasks != []:
-        return running_tasks[0].get_percent_progress()
+        return '{"percent_progress":"%s", "progress_text":"%s"}' % (running_tasks[0].get_percent_progress(), running_tasks[0].get_progress_text())
+        #return jsonify(percent_progress=running_tasks[0].get_percent_progress(), progress_text=running_tasks[0].get_progress_text())
     else:
-        return "0"
+        return '{"percent_progress":"0", "progress_text":"Submitting..."}'
+        #return jsonify(percent_progress="0", progress_text="Submitting...")
 
 if __name__ == "__main__":
     app.run()

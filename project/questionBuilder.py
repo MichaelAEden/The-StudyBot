@@ -74,9 +74,9 @@ class QuestionTrueFalse(QuestionChoice):
         answer_index = cls.TRUE
 
         # Randomly chooses if answer to question is "True" or "False"
-        is_true = random.randint(0, 1)
+        is_false = random.randint(0, 3)
 
-        if not is_true:
+        if is_false:
             false_statement = get_false_statement(statement)
             if false_statement != None:
                 question = false_statement

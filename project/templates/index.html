@@ -12,9 +12,9 @@
       <h1>Studybot</h1>
     </div>
 
-    <div class="row">
-      <div class="col-md-4">
-        <button id="process-notes__file" class="input-option btn btn-large btn-primary break-word">
+    <div class="row input-notes">
+      <div class="col-md-4 text-center">
+        <button id="submit-notes-file" class="btn btn-large btn-primary" type="button">
           <span>
             Upload
           </span>
@@ -22,21 +22,23 @@
             </br>Upload your notes from a text file.
           </span>
         </button>
-        <form id="notes-form__file" style="display:none;" enctype="multipart/form-data">
+        <form id="notes-file" style="display:none;" enctype="multipart/form-data">
           <input type="file" name="notes-file" />
           <input type="submit" />
         </form>
       </div>
-      <div class="col-md-4">
-        <textarea name="notes-text" id="notes-input" class="input-option form-control"></textarea>
-        <button id="process-notes__text" class="btn btn-primary">
+
+      <div class="col-md-4 text-center">
+        <textarea id="notes-input" name="notes-text" class="form-control" rows="8"></textarea>
+        <button id="submit-notes-text" class="btn btn-primary">
           <span>
             Generate Quiz
           </span>
         </button>
       </div>
-      <div class="col-md-4">
-        <button id="process-notes__sample" class="input-option btn btn-large btn-primary">
+
+      <div class="col-md-4 text-center">
+        <button id="submit-notes-sample" class="btn btn-large btn-primary" type="button">
           <span>
             Sample
           </span>
@@ -47,26 +49,33 @@
       </div>
     </div>
 
-    <div id="processing" class="collapse">
-      <h1 id="progress-text" class="header">
-        Processing...
-      </h1>
-      <div id="progress-bar" class="progress progress-striped active">
-         <div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+    <div id="processing-progress" class="row collapse">
+      <div class="col-md-12 text-center">
+        <h1 id="processing-progress-text" class="header">
+        </h1>
+        <div id="processing-progress-bar" class="progress progress-striped active">
+         <div class="progress-bar"  role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
          </div>
+        </div>
       </div>
     </div>
 
-    <div id="quiz-section" class="collapse">
-      <div id="quiz">
+    <div id="quiz" class="collapse">
+      <div id="quiz-questions">
       </div>
 
-      <div class="quiz-responses row">
-        <button id="submit-quiz-button" class="btn btn-large btn-primary">
-          <span>
-            Submit Responses
-          </span>
-        </button>
+      <div class="row quiz-responses">
+        <div class="col-md-4 text-center">
+        </div>
+        <div class="col-md-4 text-center">
+          <button id="submit-quiz" class="btn btn-large btn-primary">
+            <span>
+              Submit Responses
+            </span>
+          </button>
+        </div>
+        <div class="col-md-4 text-center">
+        </div>
       </div>
     </div>
 

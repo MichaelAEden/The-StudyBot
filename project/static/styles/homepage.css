@@ -8,27 +8,50 @@ p {
 	margin: 20px;
 }
 
- br {
- 	line-height: 5px;
- }
-
-#process-notes__text {
-	font-family: 'Roboto', sans-serif;
-	font-size: 20px;
+.header {
+	color: darkblue;
+	text-align: center;
 }
 
-#processing h1 {
-	font-family: 'Raleway', sans-serif;
+.input-notes .btn.btn-large.btn-primary {
+    word-wrap: none; 
+    font-family: 'Roboto', sans-serif;
+    margin-bottom: 10px;
 }
+
+	.input-notes .btn.btn-large.btn-primary span {
+		font-color: white;
+		font-size: 65px;
+	}
+
+	.input-notes .btn.btn-large.btn-primary .text-small {
+		font-size: 20px;
+	}
+
+.jumbotron {
+	background-image: url(http://cdn.pcwallart.com/images/dark-blue-gradient-wallpaper-4.jpg);
+	background-size: cover;
+}
+
+	.jumbotron h1 {
+		font-family: 'Raleway', sans-serif;
+		font-size: 150px;
+		color: #FFF;
+	}
 
 #notes-input {
-	margin: 20px auto;
+	margin-bottom: 10px;
+	min-height: 150%;
+	resize: none;
+}
+
+#processing-progress-text {
+	font-family: 'Raleway', sans-serif;
 }
 
 #quiz {
 	font-family: 'Raleway', sans-serif;
 	font-color: darkblue;
-	margin: 15px;
 }
 
 	#quiz .quiz-question {
@@ -36,7 +59,7 @@ p {
 		min-height: 200px;
 	}
 
-		#quiz .quiz-question h1 {
+		#quiz .quiz-question .question-text {
 			display: inline;
 			font-size: 100px;
 			color: #999;
@@ -61,43 +84,18 @@ p {
 				margin-left: 10px;
 			}
 
-.btn{
-    margin: 20px auto;
-    display: block;
-    word-wrap: none; 
+#submit-notes-text {
+	font-family: 'Roboto', sans-serif;
+	font-size: 30px;
+	margin-bottom: 10px;
 }
 
-	.btn.btn-medium {
-		font-size: 25px;
-		min-height: 50px;
-	}
+#submit-quiz {
+	margin-bottom: 50px;
+}
 
-	.btn.btn-large {
-		font-size: 50px;
-		min-height: 75px;
-	}
-
-	.btn span {
-		margin: 0 !important;
+	#submit-quiz span {
 		font-family: 'Roboto', sans-serif;
-		font-color: white;
-		text-align: center;
+		font-size: 50px;
 	}
 
-.header {
-	color: darkblue;
-	text-align: center;
-}
-
-.jumbotron {
-	background-image: url(http://cdn.pcwallart.com/images/dark-blue-gradient-wallpaper-4.jpg);
-	background-size: cover;
-}
-
-	.jumbotron h1 {
-		color: #FFF;
-	}
-
-.input-option .text-small {
-	font-size: 18px;
-}

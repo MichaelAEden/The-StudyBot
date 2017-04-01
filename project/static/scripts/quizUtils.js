@@ -1,5 +1,5 @@
 // Checks whether the quiz answers were correct and notifies the user accordingly
-$('#submit-quiz-button').on('click', function () {
+$('button#submit-quiz').on('click', function () {
 	var questions = $(".quiz-question")
 
 	for (var id = 1; id <= questions.length; id++) {

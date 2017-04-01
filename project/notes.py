@@ -79,6 +79,13 @@ class Notes(object):
         for sentence in statements:
             sentence = sentence.strip()
             if sentence:
+                # Questions are not statements
+                if "?" in sentence:
+                    sentence = sentence.split("?")[1]
+                # Exclamations may not be statements
+                if "!" in sentence:
+                    sentence = sentence.split("!")[1]
+
                 sentence = list(sentence)
                 sentence.append(".")
                 sentence[0] = sentence[0].upper()

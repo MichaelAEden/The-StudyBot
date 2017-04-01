@@ -7,15 +7,23 @@ import operator
 
 
 class QuizCreator(Task):
+
     def __init__(self, string):
         """Generates a quiz from the inputted notes"""
 
         # The number of each type of question created
         Task.__init__(self)
 
-        self.notes = Notes(string)
+        self.notes = None
         self.questions = []
         self.question_index = -1
+
+        self.process_notes(string)
+
+    def process_notes(self, string):
+        self.set_progress_text("Reading notes...")
+        self.notes = Notes(string)
+        self.add_progress(self.TASK_LENGTH_NOTES)
 
     def get_least_to_most_asked_questions(self):
         """Gets the type of question which appears the least in the list of questions"""
@@ -32,7 +40,8 @@ class QuizCreator(Task):
     # TODO: introduce randomness here
     def create_questions(self):
         """Creates questions based on the set of notes"""
-        increment_progress = 1.0/self.notes.get_number_of_statements()
+        self.set_progress_text("Creating questions...")
+        increment_progress = self.TASK_LENGTH_QUESTIONS/self.notes.get_number_of_statements()
 
         while self.notes.are_unused_statements():
             self.add_progress(increment_progress)
@@ -60,6 +69,8 @@ class QuizCreator(Task):
 
     def generate_template(self):
         """Generates a filled quiz HTML template"""
+        self.set_progress_text("Generating quiz...")
+        increment_progress = self.TASK_LENGTH_TEMPLATES/len(self.questions)
 
         if len(self.questions) == 0:
             raise Exception("No questions to create quiz!")
@@ -72,7 +83,10 @@ class QuizCreator(Task):
         )
 
         question_index = 1
+
         for question in self.questions:
+            self.add_progress(increment_progress)
+
             if isinstance(question, QuestionChoice):
                 response_template = env.get_template('question_mc.html')
                 response = response_template.render(
@@ -91,7 +105,7 @@ class QuizCreator(Task):
                 )
 
             quiz += response
-
             question_index += 1
 
+        self.set_progress_text("Success!")
         return quiz
